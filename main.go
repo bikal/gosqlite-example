@@ -58,6 +58,4 @@ func main() {
 		fmt.Printf("Body => %s\n", body)
 		fmt.Printf("Date => %s\n", date)
 	}
-
-	//fmt.Println("Title => %s\nBody => %s\nDate => %s", );
 }
