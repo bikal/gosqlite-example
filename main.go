@@ -6,8 +6,15 @@ import (
 	"gosqlite.googlecode.com/hg/sqlite"
 )
 
+type Article struct {
+	Id    int
+	Title string
+	Body  string
+	Date  string
+}
+
 func main() {
-	fmt.Println("********* Reading from a SQLite3 Database **********")
+	fmt.Println("\n********* Reading from a SQLite3 Database **********")
 	db := "test.db"
 
 	conn, err := sqlite.Open(db)
@@ -23,12 +30,7 @@ func main() {
 	insertSql := `INSERT INTO articles(title, body, date) VALUES("This is a Test Article Title.",
         "MO, dates are a pain.  I spent considerable time trying to decide how best to
         store dates in my app(s), and eventually chose to use Unix times (integers).
-        It seemed an easy choice as I program in Perl and JavaScript.
-
-        Lately, I've begun to regret the choice I made.  Every ad-hoc query I need to
-        do (select * from mytable...) becomes an exercise in using SQLite date
-        functions.  If I had it to do over, I would probably store my datetimes as
-        YYYY-MM-DD HH:MM:SS strings.",
+        It seemed an easy choice as I program in Perl and JavaScript.",
         "12/05/2010");`
 
 	err = conn.Exec(insertSql)
@@ -43,19 +45,17 @@ func main() {
 	}
 
 	if selectStmt.Next() {
-		var id int 
-		var title string 
-		var body string
-		var date string
-		
-		err = selectStmt.Scan(&id, &title, &body, &date)
+		var article Article
+
+		err = selectStmt.Scan(&article.Id, &article.Title, &article.Body, &article.Date)
 		if err != nil {
-            fmt.Printf("Error while getting row data: %s\n", err)
-            os.Exit(1)
+			fmt.Printf("Error while getting row data: %s\n", err)
+			os.Exit(1)
 		}
-		fmt.Printf("Id => %s\n", id)
-		fmt.Printf("Title => %s\n", title)
-		fmt.Printf("Body => %s\n", body)
-		fmt.Printf("Date => %s\n", date)
+
+		fmt.Printf("Id => %d\n", article.Id)
+		fmt.Printf("Title => %s\n", article.Title)
+		fmt.Printf("Body => %s\n", article.Body)
+		fmt.Printf("Date => %s\n", article.Date)
 	}
 }
