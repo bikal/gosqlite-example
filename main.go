@@ -44,7 +44,7 @@ func main() {
 		fmt.Println("Error while Selecting: %s", err)
 	}
 
-	if selectStmt.Next() {
+	for selectStmt.Next() {
 		var article Article
 
 		err = selectStmt.Scan(&article.Id, &article.Title, &article.Body, &article.Date)
